@@ -4,7 +4,7 @@ from scipy.stats import invgamma
 
 
 
-# hyperpriors
+#####  hyperpriors
 
 m0= np.array([-0.25, 0.25])
 M0 = 2.22*np.identity(2)
@@ -19,7 +19,7 @@ G0=1
 nu= 8
 tau=20
 
-# prior distributions
+##### prior distributions
 
 
 # beta
@@ -51,3 +51,19 @@ lambda = np.random.gamma( shape = nu/2,  scale = nu/2,N )
 gamma= np.random.multivariate_normal(mean= np.zeros(g), cov=tau*np.identity(g) )
 
 #epsilon
+epsilon = np.random.dirichlet( (5,2), size=None)*np.random.dirichlet( (3,7), size=None)*np.random.dirichlet( (7,3), size=None)*np.random.dirichlet( (3,7), size=None)
+
+# transition distribution of the independent groups ???
+
+##### posterior distributions
+
+
+
+
+
+
+
+
+
+
+
