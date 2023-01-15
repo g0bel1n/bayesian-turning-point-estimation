@@ -1,0 +1,137 @@
+K = size(etamc,2);
+M = size(Smc,3);
+str=['k- ';'k-.';'b  ';'y  ';'g  ';'c  '];
+leg=['group 1'; 'group 2';'group 3';'group 4'];
+
+if M< 500
+    indexmc=[1:M];
+else
+    ispace=fix(M/500);indexmc=[1:ispace:M];
+end   
+
+
+% daten_read_cont0604;
+cat_ind = cumsum(sum(cat_dum(ones(fix((1,max(cat_dum)),:)==kron(ones(1,length(cat_dum)),[1:max(cat_dum)]'),2)); % index series, which series is last in each category
+cat_prob=zeros(1,length(cat_dum));
+cat_prob(cat_ind)=1;
+sortindex=0;chorder='series'; % kein sortieren
+%sortindex=2;chorder='size (1996/1)'; % sort by size(1999)
+
+if sortindex~=0
+%    if (sortindex==2)+(sortindex==3)
+%       [ss is]=sort(squeeze(Zbasis(24,sortindex,indexb))); end
+%    if (sortindex==4)
+%       [ss is]=sort(caprat(24,indexb)); end
+else
+  is=[1:size(Smc,2)]';
+  ss=[1:size(Smc,2)]';
+  Smcsort=Smc;
+end
+% for i=1:size(Smc,3)
+% Smcsort(:,is,i)=Smc(:,is,i);
+% end
+
+if S_logit
+    figure(gcf+1)
+    nc=size(gammc,2)-1;
+    for j=1:nc
+        subplot(1,nc,j)
+        for l=1:(K-(K>2)*(1-DStruc))
+            [xa,fa]=dichte(gammc(indexmc,j+1,l));
+            plot(xa,fa,str(l,:));hold on;
+        end
+        if j==1
+            xlabel('corr with GDP')
+        elseif j==2
+            xlabel('corr with KTAUF')
+        end
+    end
+end
+
+
+if K>=1 
+    figure(gcf+1);
+    prob=zeros(K,size(Smcsort,2));
+    prob=[mean(Smcsort,3)>0.5; mean(1-sum(Smcsort,1),3)>0.5];
+    prob1=[mean(Smcsort,3);mean(1-sum(Smcsort,1),3)];
+%     prob1=prob;
+    l=1;
+    for k=1:(K-(K>2)*(1-DStruc));
+        %for k=[1 2 4];
+%         prob(k,:)=sum(Smcsort==k*ones(size(Smcsort)))/size(Smcsort,1)>0.5;
+%         prob1(k,:)=sum(Smcsort==k*ones(size(Smcsort)))/size(Smcsort,1);
+        if k~=K+1
+            subplot(K-(K>2)*(1-DStruc),1,l);
+            h=bar(ss,prob1(k,:),'y');
+            hold on
+            bar(ss,prob1(k,:).*cat_prob,'b')
+            l=l+1;
+        end
+        set(gca,'XTick',[1:size(prob1,2)],'XTickLabel',' ','FontSize',10)
+%          xax=get(h,'XData');
+%          yax=get(h,'YData');
+%          for j=1:length(ss);
+%              text(xax(1,ss(j)),yax(1),ctries(ss(j),:),'VerticalAlignment','top','HorizontalAlignment','left','FontSize',10)
+%          end
+         ylabel(['S_i=' int2str(k) ],'FontSize',12)
+%          ylabel(['S_i=' int2str(k) ', i^*=' int2str(mean(istarmc(:,k)))],'FontSize',12)
+
+        %   bar(indexb,prob(k,:));
+        %axis([0 size(Smc,2) 0 1]);
+        axis([ss(1)-1 ss(end)+1 0 1]);
+%        axis off
+        if k==1 title(['by ' chorder]);end
+    end
+%     ifig=ifig+1;
+%     figure(ifig);
+%     
+%     index=[1:nbank];
+%     indexsort=indexb(is)';
+%     indexZ=[1:size(Zbasis,3)];%?????????
+%     indexZ=indexZ(is);%??????????????
+%     
+%     BLZsort=BLZ(indexsort);
+%     class=zeros(size(BLZ,1),K+1);
+%     maxprob=max(prob);
+%     
+%     
+%     var=[];
+%     for k=1:K
+%         %['Pr(K=' num2str(k) ')>0.8']
+%         %  ip=prob(k,:)>0.8;
+%         %  ip=prob(k,:)==maxprob;
+%         ip=prob(k,:)==1;
+%         class(indexsort(ip),k)=1;
+%         if k~=2
+%             if (sortindex==2)+(sortindex==3)
+%                 %scatter(Zbasis(24,2,indexZ(ip)),Zbasis(24,3,indexZ(ip)),str(k)); 
+%                 scatter(Zbasis(24,2,indexsort(ip)),Zbasis(24,3,indexsort(ip)),str(k));
+%                 xlabel('size (1996/1)');ylabel('liquidity (1996/1)');
+%             end
+%             if sortindex==4
+%                 scatter(Zbasis(24,2,indexsort(ip)),caprat(24,indexsort(ip)),str(k));
+%                 xlabel('size (1996/1)');ylabel('capital share (1996/1)');
+%             end
+%             hold on; 
+%             %var=[var squeeze(Zbasis(24,2,indexsort(ip))) squeeze(Zbasis(24,3,indexsort(ip)))];
+%         end;
+%         if k==1 title('classification');end
+%     end
+%     class(iout,K+1)=1;
+%     class_size=num2str([[1:size(BLZsort,1)]' index(1,indexsort)' BLZsort class(indexsort,:)])
+%     class_BLZ=num2str([index' BLZ class])
+%     
+%     ifig=ifig+1;
+%     figure(ifig);
+%     for k=1:K+1
+%         subplot(K+1,1,k);
+%         %bar(index,class(:,k));
+%         bar(BLZ,class(:,k));
+%         if k==1 title('classification -- ordered by BLZ');end
+%     end
+end
+
+dMS=size(ZMS,2);
+if dMS>0
+    plotprobMS;
+end   
